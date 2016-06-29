@@ -6,7 +6,7 @@
   * currently implemented as gaussian distribution
   * Sum of probabilities is obviously equal to 1
   * sample usage:
-  ```
-  $ ./input_generator 4
-  0.161612 0.192579 0.369044 0.276765 
-  ```
+```
+$ ./input_generator 4
+0.161612 0.192579 0.369044 0.276765 
+```
