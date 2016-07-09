@@ -46,3 +46,7 @@ $ ./random_value 1 42
 $ ./trivial_solver < ../tests/trivial_solver_1.txt
 0 1 2
 ```
+
+
+### Attempt 1
+  * TODO: description

@@ -9,10 +9,12 @@ RVALUE_BIN="$BUILD_DIR/random_value"
 
 PROBLEM_DIR="./problem"
 PROBLEM_INPUT="$PROBLEM_DIR/input.txt"
-PROBLEM_DISTR_SIZE=100000
-PROBLEM_ROLLS=10000
+PROBLEM_DISTR_SIZE=1000
+PROBLEM_ROLLS=1000000
 PROBLEM_SEED=$1
 PROBLEM_ANSWERS="$PROBLEM_DIR/answers.txt"
+
+PROBLEM_ATTEMPT_PATTERN="attempt_*"
 
 
 
@@ -32,7 +34,11 @@ rm -rf $BUILD_DIR && mkdir -p $BUILD_DIR
 $COMPILER -o "$DIS_GEN_BIN" "$DIS_GEN_SRC"
 $COMPILER -o "$SOLVER_BIN" "$SOLVER_SRC"
 $COMPILER -o "$RVALUE_BIN" "$RVALUE_SRC"
-
+for i in $( ls $PROBLEM_ATTEMPT_PATTERN ); do
+  bin_name=$( basename $i)
+  bin_name="${bin_name%%.*}"
+  $COMPILER -o "$BUILD_DIR/$bin_name" "$i"
+done
 
 #TODO run asserts on trivial_solver
 
@@ -51,5 +57,13 @@ $SOLVER_BIN < $PROBLEM_INPUT > $PROBLEM_ANSWERS
 
 echo "Measuring trivial algorithm performance..."
 time $SOLVER_BIN < $PROBLEM_INPUT > /dev/null
+
+for i in $( ls $BUILD_DIR/$PROBLEM_ATTEMPT_PATTERN ); do
+  echo "Measuring $i ..."
+  time $i < $PROBLEM_INPUT > /dev/null
+  #echo "Validating answers..."
+  #$i < $PROBLEM_INPUT > "./problem/1a.txt"
+  #diff <( cat $PROBLEM_ANSWERS ) <( $i < $PROBLEM_INPUT )
+done
 
 #echo "Problem 2: Many distributions, single random roll on each"
