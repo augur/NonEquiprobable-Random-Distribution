@@ -1,8 +1,8 @@
 # NonEquiprobable-Random-Distribution
 
 ### distrib_generator
-  * takes number of probabilities to generate and optionally PRG seed (as command line arguments)
-  * returns nonequiprobable distribution of probabilities, (as space-separated array of floating point values, to STDOUT)
+  * takes number of outcomes of random event to generate and optionally PRG seed (as command line arguments)
+  * returns nonequiprobable distribution of outcome probabilities, (as space-separated array of floating point values, to STDOUT)
   * currently implemented as gaussian distribution
   * sum of probabilities is obviously equal to 1
   * sample usage:
@@ -35,11 +35,11 @@ $ ./random_value 1 42
 
 ### trivial_solver
   * takes several values, whitespace separated, from STDIN:
-    * number of probabilities
-    * distribution of probabilities itself
+    * number of random event outcomes
+    * distribution of outcome probabilities itself
     * number of random values
     * random values set as well
-  * returns indices of occured probabilities to STDOUT
+  * returns indices of occured outcomes to STDOUT
   * uses straight trivial algorithm: incrementally iterates over distribution
   * sample usage:
 ```
@@ -49,4 +49,10 @@ $ ./trivial_solver < ../tests/trivial_solver_1.txt
 
 
 ### Attempt 1
-  * TODO: description
+  * reads input as trivial_solver does
+  * sorts probabilities in descending order, maintaining their original position
+  * performance depends on distribution properties
+  * works about 15-20% faster than trivial_solver, on gaussian distribution from distrib_generator
+  * solves problem **only partially**:
+    * although it produces proper random distribution of outcomes on abstract random values set
+    * on fixed random values set, exact answers will not match trivial_solver's one    
