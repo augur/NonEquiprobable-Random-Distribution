@@ -33,6 +33,10 @@ $ ./random_value 1 42
 0.524587
 ```  
 
+### validator
+  * TODO description
+
+
 ### trivial_solver
   * takes several values, whitespace separated, from STDIN:
     * number of random event outcomes
@@ -52,7 +56,14 @@ $ ./trivial_solver < ../tests/trivial_solver_1.txt
   * reads input as trivial_solver does
   * sorts probabilities in descending order, maintaining their original position
   * performance depends on distribution properties
-  * works about 15-20% faster than trivial_solver, on gaussian distribution from distrib_generator
+  * works about **1.2** times faster than trivial_solver, on gaussian distribution from distrib_generator
   * solves problem **only partially**:
     * although it produces proper random distribution of outcomes on abstract random values set
     * on fixed random values set, exact answers will not match trivial_solver's one    
+
+### Attempt 2
+  * reads input as trivial_solver does
+  * builds enhanced distribution array, by adding sum of previous elements to next one (this action also makes array sorted)
+  * performs binary search of given random values on enhanced array
+  * performance is almost independent of distribution properties
+  * works about **1.7** times faster than trivial_solver

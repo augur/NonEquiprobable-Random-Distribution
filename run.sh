@@ -6,6 +6,8 @@ SOLVER_SRC="./trivial_solver.cpp"
 SOLVER_BIN="$BUILD_DIR/trivial_solver"
 RVALUE_SRC="./random_value.cpp"
 RVALUE_BIN="$BUILD_DIR/random_value"
+VALDTR_SRC="./validator.cpp"
+VALDTR_BIN="$BUILD_DIR/validator"
 
 PROBLEM_DIR="./problem"
 PROBLEM_INPUT="$PROBLEM_DIR/input.txt"
@@ -34,6 +36,8 @@ rm -rf $BUILD_DIR && mkdir -p $BUILD_DIR
 $COMPILER -o "$DIS_GEN_BIN" "$DIS_GEN_SRC"
 $COMPILER -o "$SOLVER_BIN" "$SOLVER_SRC"
 $COMPILER -o "$RVALUE_BIN" "$RVALUE_SRC"
+$COMPILER -o "$VALDTR_BIN" "$VALDTR_SRC"
+
 for i in $( ls $PROBLEM_ATTEMPT_PATTERN ); do
   bin_name=$( basename $i)
   bin_name="${bin_name%%.*}"
@@ -61,9 +65,14 @@ time $SOLVER_BIN < $PROBLEM_INPUT > /dev/null
 for i in $( ls $BUILD_DIR/$PROBLEM_ATTEMPT_PATTERN ); do
   echo "Measuring $i ..."
   time $i < $PROBLEM_INPUT > /dev/null
-  #echo "Validating answers..."
-  #$i < $PROBLEM_INPUT > "./problem/1a.txt"
-  #diff <( cat $PROBLEM_ANSWERS ) <( $i < $PROBLEM_INPUT )
+  echo "Validating answers..."
+  $i < $PROBLEM_INPUT | $VALDTR_BIN $PROBLEM_ROLLS "$PROBLEM_ANSWERS" 
+  #$VALDTR_BIN $PROBLEM_ROLLS "$PROBLEM_ANSWERS"  < "$i < $PROBLEM_INPUT"
+  #if [[ $(diff <( cat $PROBLEM_ANSWERS ) <( $i < $PROBLEM_INPUT )) ]]; then
+  #  echo "Validation failed! (For Attempt 1 this is okay, see README)"
+  #else
+  #  echo "Validation OK!"
+  #fi
 done
 
 #echo "Problem 2: Many distributions, single random roll on each"
