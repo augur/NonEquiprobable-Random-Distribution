@@ -17,6 +17,7 @@ int main(int argc, char const *argv[]) {
   default_random_engine generator (seed);
   uniform_real_distribution<double> distrib (0.0,1.0);
 
+  cout.precision(15);
   for (size_t i = 0; i < count; i++) {
     cout << distrib(generator) << " ";
   }

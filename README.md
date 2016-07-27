@@ -67,3 +67,10 @@ $ ./trivial_solver < ../tests/trivial_solver_1.txt
   * performs binary search of given random values on enhanced array
   * performance is almost independent of distribution properties
   * works about **1.7** times faster than trivial_solver
+  * **Quite rarely** results get messed up (some of them - 50% or more - cease to match answers from trivial_solver). More interestingly, it happens simultaneously with abnormal *Attempt 1* percent of matching answers (usually it has less than 0.1% matched) - about 50% or more matches. **AND** sum of matched percents of *Attempts 1* and *2* is roughly equals 100%. Wow.
+    * later investigation opened following thing: it happens when there exists 'error' string in *answers.txt* (which means trivial_solver couldn't match one of distributions)
+    * It is no doubt some extreme case in operations with floating point values
+    * Increasing precision of fp-values to 15 digits in their string representation fixes this problem (or simply moves it probability of occurrence from *quite rare* to *nearly impossible*)
+
+### Attempt 3
+  * TODO description

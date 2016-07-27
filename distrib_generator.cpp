@@ -28,6 +28,7 @@ int main(int argc, char const *argv[]) {
       sum += prob;
     }
 
+    cout.precision(15);
     for (int i = 0; i < num; i++) {
       cout << (probs[i] / sum) << " ";
     }
