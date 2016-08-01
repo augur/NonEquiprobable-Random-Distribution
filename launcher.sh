@@ -9,14 +9,18 @@ BUILD_DIR="./build"
 
 UTILS_PATH="./source/utilities"
 DIS_GEN_SRC="$UTILS_PATH/distrib_generator.cpp"
-SOLVER_SRC="$UTILS_PATH/trivial_solver.cpp"
 RVALUE_SRC="$UTILS_PATH/random_value.cpp"
 VALDTR_SRC="$UTILS_PATH/validator.cpp"
+TSOLVER_SRC="$UTILS_PATH/trivial_solver.cpp"
+MSOLVER_SRC="$UTILS_PATH/mock_solver.cpp"
+
 
 DIS_GEN_BIN="$BUILD_DIR/distrib_generator"
-SOLVER_BIN="$BUILD_DIR/trivial_solver"
 RVALUE_BIN="$BUILD_DIR/random_value"
 VALDTR_BIN="$BUILD_DIR/validator"
+TSOLVER_BIN="$BUILD_DIR/trivial_solver"
+MSOLVER_BIN="$BUILD_DIR/mock_solver"
+
 
 PROBLEM_DISTR_SIZE=$1
 PROBLEM_ROLLS=$2
@@ -44,9 +48,10 @@ fi
 
 rm -rf $BUILD_DIR && mkdir -p $BUILD_DIR
 $COMPILER -o "$DIS_GEN_BIN" "$DIS_GEN_SRC"
-$COMPILER -o "$SOLVER_BIN" "$SOLVER_SRC"
 $COMPILER -o "$RVALUE_BIN" "$RVALUE_SRC"
 $COMPILER -o "$VALDTR_BIN" "$VALDTR_SRC"
+$COMPILER -o "$TSOLVER_BIN" "$TSOLVER_SRC"
+$COMPILER -o "$MSOLVER_BIN" "$MSOLVER_SRC"
 
 #Compile attempts
 for i in $( ls $PROBLEM_ATTEMPT_PATH/$PROBLEM_ATTEMPT_PATTERN ); do
@@ -68,10 +73,13 @@ echo "$PROBLEM_ROLLS" >> $PROBLEM_INPUT
 echo "$($RVALUE_BIN $PROBLEM_ROLLS $PROBLEM_SEED)" >> $PROBLEM_INPUT
 
 echo "Generating answers..."
-$SOLVER_BIN < $PROBLEM_INPUT > $PROBLEM_ANSWERS
+$TSOLVER_BIN < $PROBLEM_INPUT > $PROBLEM_ANSWERS
+
+echo "Measuring mock (no algorithm) input and output performance..."
+time $MSOLVER_BIN < $PROBLEM_INPUT > /dev/null
 
 echo "Measuring trivial algorithm performance..."
-time $SOLVER_BIN < $PROBLEM_INPUT > /dev/null
+time $TSOLVER_BIN < $PROBLEM_INPUT > /dev/null
 
 for i in $( ls $BUILD_DIR/$PROBLEM_ATTEMPT_PATTERN ); do
   echo "Measuring $i ..."

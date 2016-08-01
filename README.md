@@ -64,7 +64,7 @@ $ ./trivial_solver < ../tests/trivial_solver_1.txt
   * reads input as trivial_solver does
   * sorts probabilities in descending order, maintaining their original position
   * performance depends on distribution properties
-  * works about **1.2** times faster than trivial_solver, on gaussian distribution from distrib_generator
+  * works about **1.4** times faster than trivial_solver, on gaussian distribution from distrib_generator
   * solves problem **only partially**:
     * although it produces proper random distribution of outcomes on abstract random values set
     * on fixed random values set, exact answers will not match trivial_solver's one    
@@ -74,7 +74,7 @@ $ ./trivial_solver < ../tests/trivial_solver_1.txt
   * builds enhanced distribution array, by adding sum of previous elements to next one (this action also makes array sorted)
   * performs binary search of given random values on enhanced array
   * performance is almost independent of distribution properties
-  * works about **1.7** times faster than trivial_solver
+  * works about **4.7** times faster than trivial_solver
   * **Quite rarely** results get messed up (some of them - 50% or more - cease to match answers from trivial_solver). More interestingly, it happens simultaneously with abnormal *Attempt 1* percent of matching answers (usually it has less than 0.1% matched) - about 50% or more matches. **AND** sum of matched percents of *Attempts 1* and *2* is roughly equals 100%. Wow.
     * later investigation opened following thing: it happens when there exists 'error' string in *answers.txt* (which means trivial_solver couldn't match one of distributions)
     * It is no doubt some extreme case in operations with floating point values
