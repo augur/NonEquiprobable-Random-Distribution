@@ -1,21 +1,31 @@
 #!/bin/bash
+
+if [ "$#" -lt 2 ]; then
+    echo "Usage: ./launcher.sh <distribution size> <number of random rolls> [optional: random seed]"
+    exit
+fi
+
 BUILD_DIR="./build"
-DIS_GEN_SRC="./distrib_generator.cpp"
+
+UTILS_PATH="./source/utilities"
+DIS_GEN_SRC="$UTILS_PATH/distrib_generator.cpp"
+SOLVER_SRC="$UTILS_PATH/trivial_solver.cpp"
+RVALUE_SRC="$UTILS_PATH/random_value.cpp"
+VALDTR_SRC="$UTILS_PATH/validator.cpp"
+
 DIS_GEN_BIN="$BUILD_DIR/distrib_generator"
-SOLVER_SRC="./trivial_solver.cpp"
 SOLVER_BIN="$BUILD_DIR/trivial_solver"
-RVALUE_SRC="./random_value.cpp"
 RVALUE_BIN="$BUILD_DIR/random_value"
-VALDTR_SRC="./validator.cpp"
 VALDTR_BIN="$BUILD_DIR/validator"
 
+PROBLEM_DISTR_SIZE=$1
+PROBLEM_ROLLS=$2
+PROBLEM_SEED=$3
 PROBLEM_DIR="./problem"
 PROBLEM_INPUT="$PROBLEM_DIR/input.txt"
-PROBLEM_DISTR_SIZE=1000
-PROBLEM_ROLLS=1000000
-PROBLEM_SEED=$1
 PROBLEM_ANSWERS="$PROBLEM_DIR/answers.txt"
 
+PROBLEM_ATTEMPT_PATH="./source/attempts"
 PROBLEM_ATTEMPT_PATTERN="attempt_*"
 
 
@@ -23,10 +33,10 @@ PROBLEM_ATTEMPT_PATTERN="attempt_*"
 #Compiler select
 if [ $(uname -s) == "Darwin" ]
   then
-    COMPILER='clang++ -std=c++11 -stdlib=libc++ -O3 -Wall'
+    COMPILER='clang++ -std=c++11 -stdlib=libc++ -O3 -Wall -I'$UTILS_PATH
     echo "Compiler: Clang"
   else
-    COMPILER='g++ -std=c++11 -O3 -Wall'
+    COMPILER='g++ -std=c++11 -O3 -Wall -I'$UTILS_PATH
     echo "Compiler: GCC"
 fi
 
@@ -38,7 +48,8 @@ $COMPILER -o "$SOLVER_BIN" "$SOLVER_SRC"
 $COMPILER -o "$RVALUE_BIN" "$RVALUE_SRC"
 $COMPILER -o "$VALDTR_BIN" "$VALDTR_SRC"
 
-for i in $( ls $PROBLEM_ATTEMPT_PATTERN ); do
+#Compile attempts
+for i in $( ls $PROBLEM_ATTEMPT_PATH/$PROBLEM_ATTEMPT_PATTERN ); do
   bin_name=$( basename $i)
   bin_name="${bin_name%%.*}"
   $COMPILER -o "$BUILD_DIR/$bin_name" "$i"
@@ -66,7 +77,7 @@ for i in $( ls $BUILD_DIR/$PROBLEM_ATTEMPT_PATTERN ); do
   echo "Measuring $i ..."
   time $i < $PROBLEM_INPUT > /dev/null
   echo "Validating answers..."
-  $i < $PROBLEM_INPUT | $VALDTR_BIN $PROBLEM_ROLLS "$PROBLEM_ANSWERS" 
+  $i < $PROBLEM_INPUT | $VALDTR_BIN $PROBLEM_ROLLS "$PROBLEM_ANSWERS"
   #$VALDTR_BIN $PROBLEM_ROLLS "$PROBLEM_ANSWERS"  < "$i < $PROBLEM_INPUT"
   #if [[ $(diff <( cat $PROBLEM_ANSWERS ) <( $i < $PROBLEM_INPUT )) ]]; then
   #  echo "Validation failed! (For Attempt 1 this is okay, see README)"

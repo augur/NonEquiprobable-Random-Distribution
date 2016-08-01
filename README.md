@@ -1,5 +1,10 @@
 # NonEquiprobable-Random-Distribution
 
+## Quick summary
+  * TODO:Description
+
+## Utilities
+
 ### distrib_generator
   * takes number of outcomes of random event to generate and optionally PRG seed (as command line arguments)
   * returns nonequiprobable distribution of outcome probabilities, (as space-separated array of floating point values, to STDOUT)
@@ -14,7 +19,6 @@ $ ./distrib_generator 4 42
 $ ./distrib_generator 4 42
 0.211431 0.16566 0.357825 0.265084
 ```
-
 
 ### random_value
   * takes number of values to return as command line argument
@@ -33,10 +37,6 @@ $ ./random_value 1 42
 0.524587
 ```  
 
-### validator
-  * TODO description
-
-
 ### trivial_solver
   * takes several values, whitespace separated, from STDIN:
     * number of random event outcomes
@@ -51,6 +51,14 @@ $ ./trivial_solver < ../tests/trivial_solver_1.txt
 0 1 2
 ```
 
+### validator
+  * takes number of outcomes, and path to file, which contains valid indices of occured outcomes (both as command line arguments)
+  * takes array of indices of outcomes, provided by one of the *attempts* (see below) from STDIN
+  * prints how many outcomes provided by attempt, are equal to valid ones.
+  * This surely could be implemented in bash, however author is too lazy
+  * forget about sample usage, you won't need it
+
+## Problem 1 attempts
 
 ### Attempt 1
   * reads input as trivial_solver does

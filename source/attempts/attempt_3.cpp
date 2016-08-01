@@ -14,7 +14,7 @@ int main(int argc, char const *argv[]) {
 
   input_read(dist_count, distribution, rvalue_count, rvalues);
 
-  double min_value = distribution[0]
+  double min_value = distribution[0];
   for (size_t i = 1; i < dist_count; i++) {
     if (distribution[i] < min_value) {
       min_value = distribution[i];
