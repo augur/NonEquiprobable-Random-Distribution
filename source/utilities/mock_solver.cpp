@@ -1,5 +1,5 @@
 #include <iostream>
-#include "input_reading.cpp" //just too lazy to include .h
+#include "input_reading.cpp"
 
 using namespace std;
 

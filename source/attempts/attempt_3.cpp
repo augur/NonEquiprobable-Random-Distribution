@@ -1,9 +1,12 @@
 #include <iostream>
-#include <ratio>
+#include <cstdint>
 
-#include "input_reading.cpp" //just too lazy to include .h
+#include "input_reading.hpp"
+#include "rational.hpp"
 
 using namespace std;
+
+const uint64_t memory_limit = 100000; //Uses twice so many bytes of memory
 
 int main(int argc, char const *argv[]) {
 
@@ -14,15 +17,15 @@ int main(int argc, char const *argv[]) {
 
   input_read(dist_count, distribution, rvalue_count, rvalues);
 
-  double min_value = distribution[0];
-  for (size_t i = 1; i < dist_count; i++) {
-    if (distribution[i] < min_value) {
-      min_value = distribution[i];
-    }
+  rational* rationals = new rational[dist_count];
+  uint64_t global_lcm = 1;
+  for (size_t i = 0; i < dist_count; i++) {
+    rationals[i] = rationalize(distribution[i], memory_limit);
+    global_lcm = lcm(global_lcm, rationals[i].den);
+    std::cout << rationals[i] << std::endl;
   }
-  double fp_mult = 1 / min_value;
+  std::cout << global_lcm << std::endl;
 
-  int int_mult = 1;
   for (size_t i = 0; i < dist_count; i++) {
     //holy cow, C++ doesn't have built-in implementation of Rationals >_<
   }

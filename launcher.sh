@@ -7,13 +7,14 @@ fi
 
 BUILD_DIR="./build"
 
+COMMON_SRC_PATH="./source/common"
+
 UTILS_PATH="./source/utilities"
 DIS_GEN_SRC="$UTILS_PATH/distrib_generator.cpp"
 RVALUE_SRC="$UTILS_PATH/random_value.cpp"
 VALDTR_SRC="$UTILS_PATH/validator.cpp"
 TSOLVER_SRC="$UTILS_PATH/trivial_solver.cpp"
 MSOLVER_SRC="$UTILS_PATH/mock_solver.cpp"
-
 
 DIS_GEN_BIN="$BUILD_DIR/distrib_generator"
 RVALUE_BIN="$BUILD_DIR/random_value"
@@ -37,10 +38,10 @@ PROBLEM_ATTEMPT_PATTERN="attempt_*"
 #Compiler select
 if [ $(uname -s) == "Darwin" ]
   then
-    COMPILER='clang++ -std=c++11 -stdlib=libc++ -O3 -Wall -I'$UTILS_PATH
+    COMPILER='clang++ -std=c++11 -stdlib=libc++ -O3 -Wall -I'$COMMON_SRC_PATH
     echo "Compiler: Clang"
   else
-    COMPILER='g++ -std=c++11 -O3 -Wall -I'$UTILS_PATH
+    COMPILER='g++ -std=c++11 -O3 -Wall -I'$COMMON_SRC_PATH
     echo "Compiler: GCC"
 fi
 
@@ -57,11 +58,10 @@ $COMPILER -o "$MSOLVER_BIN" "$MSOLVER_SRC"
 for i in $( ls $PROBLEM_ATTEMPT_PATH/$PROBLEM_ATTEMPT_PATTERN ); do
   bin_name=$( basename $i)
   bin_name="${bin_name%%.*}"
-  $COMPILER -o "$BUILD_DIR/$bin_name" "$i"
+  $COMPILER -o "$BUILD_DIR/$bin_name" "$i" $COMMON_SRC_PATH/*
 done
 
 #TODO run asserts on trivial_solver
-
 
 echo "Problem 1: Single distribution, many random rolls"
 rm -rf $PROBLEM_DIR && mkdir -p $PROBLEM_DIR
@@ -83,7 +83,7 @@ time $TSOLVER_BIN < $PROBLEM_INPUT > /dev/null
 
 for i in $( ls $BUILD_DIR/$PROBLEM_ATTEMPT_PATTERN ); do
   echo "Measuring $i ..."
-  time $i < $PROBLEM_INPUT > /dev/null
+  time $i < $PROBLEM_INPUT #> /dev/null
   echo "Validating answers..."
   $i < $PROBLEM_INPUT | $VALDTR_BIN $PROBLEM_ROLLS "$PROBLEM_ANSWERS"
   #$VALDTR_BIN $PROBLEM_ROLLS "$PROBLEM_ANSWERS"  < "$i < $PROBLEM_INPUT"

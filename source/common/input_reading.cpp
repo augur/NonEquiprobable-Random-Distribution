@@ -1,6 +1,4 @@
-#include <iostream>
-
-using namespace std;
+#include "input_reading.hpp"
 
 void input_read(size_t& dist_count, double*& distribution,
                 size_t& rvalue_count, double*& rvalues) {

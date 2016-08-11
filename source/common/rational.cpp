@@ -1,10 +1,9 @@
-#include <iostream>
+#include "rational.hpp"
 
-using namespace std;
 
 // Greatest Common Divisor
 // Pass positive arguments or suffer
-// GCC should have optimize this tail recursion
+// GCC should has optimize this tail recursion
 long gcd(long a, long b) {
   if (b > a)
     return gcd(b, a);
@@ -21,21 +20,9 @@ long lcm(long a, long b) {
 }
 
 
-struct rational {
-  long num;
-  long den;
-
-  // No time to explain - be friend!
-  friend ostream& operator<<(ostream& output, const rational& r) {
-     output << r.num << "/" << r.den;
-     return output;
-  }
-};
-
-
 //  x is real number to approx
 //  maxden is the maximum denominator allowed
-rational rationalize(double x, long maxden) {
+rational rationalize(double x, uint64_t maxden) {
   // Based on http://www.ics.uci.edu/~eppstein/numth/frap.c
   /*
   ** find rational approximation to given real number
@@ -55,17 +42,16 @@ rational rationalize(double x, long maxden) {
   ** we just keep the last partial product of these matrices.
   */
 
-  long m[2][2];
-  double startx = x;
-  long ai;
+  uint64_t m[2][2];
+  uint64_t ai;
 
   /* initialize matrix */
   m[0][0] = m[1][1] = 1;
   m[0][1] = m[1][0] = 0;
 
   /* loop finding terms until denom gets too big */
-  while (m[1][0] *  ( ai = (long)x ) + m[1][1] <= maxden) {
-    long t;
+  while (m[1][0] *  ( ai = (uint64_t)x ) + m[1][1] <= maxden) {
+    uint64_t t;
     t = m[0][0] * ai + m[0][1];
     m[0][1] = m[0][0];
     m[0][0] = t;
@@ -83,7 +69,8 @@ rational rationalize(double x, long maxden) {
   return result;
 }
 
-/* For test purposes */
+
+/* For test purposes, commented out for a while
 int main(int argc, char const *argv[]) {
   cout << gcd(4, 8) << endl;      // 4
   cout << gcd(45, 54) << endl;    // 9
@@ -101,3 +88,4 @@ int main(int argc, char const *argv[]) {
 
   return 0;
 }
+*/
