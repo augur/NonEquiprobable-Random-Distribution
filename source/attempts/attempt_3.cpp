@@ -7,9 +7,8 @@
 
 using namespace std;
 
-//Implying we have no more than 65536 outcomes
-//Uses twice (because of uint16_t) so many bytes of memory
-const uint64_t memory_limit = 10000000;
+//Commented out!
+//const uint64_t memory_limit = 1000000;
 
 int main(int argc, char const *argv[]) {
 
@@ -20,7 +19,12 @@ int main(int argc, char const *argv[]) {
 
   input_read(dist_count, distribution, rvalue_count, rvalues);
 
-  //Greater than memory considering possible rounding increase
+  //Implying we have no more than 65536 outcomes
+  //Let memory limit be square of outcomes count
+  //Uses twice (because of further uint16_t) so many bytes of memory
+  uint64_t memory_limit = dist_count * dist_count;
+
+  //Needs " + dist_count" extra size because of possible upper rounding
   uint16_t* indices = new uint16_t[memory_limit + dist_count];
 
   unsigned long* int_distribution = new unsigned long[dist_count];

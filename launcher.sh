@@ -33,16 +33,16 @@ PROBLEM_ANSWERS="$PROBLEM_DIR/answers.txt"
 PROBLEM_ATTEMPT_PATH="./source/attempts"
 PROBLEM_ATTEMPT_PATTERN="attempt_*"
 
-
+#TIME_UTIL='/usr/bin/time -f time:\t\t%e\nmem(kB):\t%M'
 
 #Compiler select
 if [ $(uname -s) == "Darwin" ]
   then
     COMPILER='clang++ -std=c++11 -stdlib=libc++ -O3 -Wall -I'$COMMON_SRC_PATH
-    echo "Compiler: Clang"
+    echo "Compiler: clang++"
   else
     COMPILER='g++ -std=c++11 -O3 -Wall -I'$COMMON_SRC_PATH
-    echo "Compiler: GCC"
+    echo "Compiler: g++"
 fi
 
 
