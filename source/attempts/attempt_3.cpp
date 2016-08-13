@@ -1,12 +1,15 @@
 #include <iostream>
 #include <cstdint>
+#include <cmath>
 
 #include "input_reading.hpp"
 #include "rational.hpp"
 
 using namespace std;
 
-const uint64_t memory_limit = 100000; //Uses twice so many bytes of memory
+//Implying we have no more than 65536 outcomes
+//Uses twice (because of uint16_t) so many bytes of memory
+const uint64_t memory_limit = 10000000;
 
 int main(int argc, char const *argv[]) {
 
@@ -17,17 +20,24 @@ int main(int argc, char const *argv[]) {
 
   input_read(dist_count, distribution, rvalue_count, rvalues);
 
-  rational* rationals = new rational[dist_count];
-  uint64_t global_lcm = 1;
-  for (size_t i = 0; i < dist_count; i++) {
-    rationals[i] = rationalize(distribution[i], memory_limit);
-    global_lcm = lcm(global_lcm, rationals[i].den);
-    std::cout << rationals[i] << std::endl;
-  }
-  std::cout << global_lcm << std::endl;
+  //Greater than memory considering possible rounding increase
+  uint16_t* indices = new uint16_t[memory_limit + dist_count];
 
+  unsigned long* int_distribution = new unsigned long[dist_count];
+  unsigned long total = 0;
   for (size_t i = 0; i < dist_count; i++) {
-    //holy cow, C++ doesn't have built-in implementation of Rationals >_<
+    int_distribution[i] = lround(distribution[i] * memory_limit);
+    for (size_t j = total; j < total + int_distribution[i]; j++) {
+      indices[j] = i;
+      //std::cout << indices[j] << " ";
+    }
+    total += int_distribution[i];
+  }
+  //std::cout << std::endl << total << std::endl;
+
+  for (size_t i = 0; i < rvalue_count; i++) {
+    long int_rval = lround(rvalues[i] * (total-1));
+    std::cout << indices[int_rval] << " ";
   }
 
 

@@ -83,7 +83,7 @@ time $TSOLVER_BIN < $PROBLEM_INPUT > /dev/null
 
 for i in $( ls $BUILD_DIR/$PROBLEM_ATTEMPT_PATTERN ); do
   echo "Measuring $i ..."
-  time $i < $PROBLEM_INPUT #> /dev/null
+  time $i < $PROBLEM_INPUT > /dev/null
   echo "Validating answers..."
   $i < $PROBLEM_INPUT | $VALDTR_BIN $PROBLEM_ROLLS "$PROBLEM_ANSWERS"
   #$VALDTR_BIN $PROBLEM_ROLLS "$PROBLEM_ANSWERS"  < "$i < $PROBLEM_INPUT"
