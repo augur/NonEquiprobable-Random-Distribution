@@ -58,7 +58,9 @@ $ ./trivial_solver < ../tests/trivial_solver_1.txt
   * This surely could be implemented in bash, however author is too lazy
   * forget about sample usage, you won't need it
 
-## Problem 1 attempts
+## Problem attempts
+
+* Tests performed on following input sizes: 1 000 outcomes, 1 000 000 random values
 
 ### Attempt 1
   * reads input as trivial_solver does
@@ -81,4 +83,13 @@ $ ./trivial_solver < ../tests/trivial_solver_1.txt
     * Increasing precision of fp-values to 15 digits in their string representation fixes this problem (or simply moves it probability of occurrence from *quite rare* to *nearly impossible*)
 
 ### Attempt 3
-  * TODO description
+  * reads input as trivial_solver does
+  * converts outcomes probability from fp-representation (0...1) to integer one, capped at defined limit
+  * fills another array with indices of outcomes (amount of indices is equal to integer representation of probability)
+  * iterates over random values, extracting proper outcome from indices array in O(1)
+  * works about **25.5** times faster than trivial_solver
+  * solves problem with **precision restrictions**:
+    * due to probability rounding error, some results will be incorrect
+    * error rate may be decreased by increasing indices array limit, however it negatevily affects performance
+    * error rate also depends on distribution properties
+    * on basic distrib_generator distribution, with optimal memory limit (which gives mentioned **x25.5** performance boost over trivial_solver), statistically observable error rate on big inputs is **0.5±0.2%**
