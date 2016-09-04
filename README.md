@@ -37,19 +37,7 @@ $ ./random_value 1 42
 0.524587
 ```  
 
-### trivial_solver
-  * takes several values, whitespace separated, from STDIN:
-    * number of random event outcomes
-    * distribution of outcome probabilities itself
-    * number of random values
-    * random values set as well
-  * returns indices of occured outcomes to STDOUT
-  * uses straight trivial algorithm: incrementally iterates over distribution
-  * sample usage:
-```
-$ ./trivial_solver < ../tests/trivial_solver_1.txt
-0 1 2
-```
+
 
 ### validator
   * takes number of outcomes, and path to file, which contains valid indices of occured outcomes (both as command line arguments)
@@ -61,6 +49,20 @@ $ ./trivial_solver < ../tests/trivial_solver_1.txt
 ## Problem attempts
 
 * Tests performed on following input sizes: 1 000 outcomes, 1 000 000 random values
+* Attempts take several values, whitespace separated, from STDIN:
+  * number of random event outcomes
+  * distribution of outcome probabilities itself
+  * number of random values
+  * random values set as well
+* return indices of occured outcomes to STDOUT
+
+### Mock attempt
+
+  * TODO
+
+### Trivial attempt
+
+  * uses straight trivial algorithm: incrementally iterates over distribution
 
 ### Attempt 1
   * reads input as trivial_solver does

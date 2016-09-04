@@ -5,23 +5,6 @@ if [ "$#" -lt 2 ]; then
     exit
 fi
 
-BUILD_DIR="./build"
-
-COMMON_SRC_PATH="./source/common"
-
-UTILS_PATH="./source/utilities"
-DIS_GEN_SRC="$UTILS_PATH/distrib_generator.cpp"
-RVALUE_SRC="$UTILS_PATH/random_value.cpp"
-VALDTR_SRC="$UTILS_PATH/validator.cpp"
-TSOLVER_SRC="$UTILS_PATH/trivial_solver.cpp"
-MSOLVER_SRC="$UTILS_PATH/mock_solver.cpp"
-
-DIS_GEN_BIN="$BUILD_DIR/distrib_generator"
-RVALUE_BIN="$BUILD_DIR/random_value"
-VALDTR_BIN="$BUILD_DIR/validator"
-TSOLVER_BIN="$BUILD_DIR/trivial_solver"
-MSOLVER_BIN="$BUILD_DIR/mock_solver"
-
 
 PROBLEM_DISTR_SIZE=$1
 PROBLEM_ROLLS=$2
@@ -31,7 +14,22 @@ PROBLEM_INPUT="$PROBLEM_DIR/input.txt"
 PROBLEM_ANSWERS="$PROBLEM_DIR/answers.txt"
 
 PROBLEM_ATTEMPT_PATH="./source/attempts"
-PROBLEM_ATTEMPT_PATTERN="attempt_*"
+PROBLEM_ATTEMPT_PATTERN="attempt_"
+
+BUILD_DIR="./build"
+
+COMMON_SRC_PATH="./source/common"
+
+UTILS_PATH="./source/utilities"
+DIS_GEN_SRC="$UTILS_PATH/distrib_generator.cpp"
+RVALUE_SRC="$UTILS_PATH/random_value.cpp"
+VALDTR_SRC="$UTILS_PATH/validator.cpp"
+
+DIS_GEN_BIN="$BUILD_DIR/distrib_generator"
+RVALUE_BIN="$BUILD_DIR/random_value"
+VALDTR_BIN="$BUILD_DIR/validator"
+TSOLVER_BIN="$BUILD_DIR/${PROBLEM_ATTEMPT_PATTERN}trivial"
+MSOLVER_BIN="$BUILD_DIR/${PROBLEM_ATTEMPT_PATTERN}mock"
 
 #TIME_UTIL='/usr/bin/time -f time:\t\t%e\nmem(kB):\t%M'
 
@@ -47,17 +45,17 @@ fi
 
 
 
+echo "Compiling utilities..."
 rm -rf $BUILD_DIR && mkdir -p $BUILD_DIR
 $COMPILER -o "$DIS_GEN_BIN" "$DIS_GEN_SRC"
 $COMPILER -o "$RVALUE_BIN" "$RVALUE_SRC"
 $COMPILER -o "$VALDTR_BIN" "$VALDTR_SRC"
-$COMPILER -o "$TSOLVER_BIN" "$TSOLVER_SRC"
-$COMPILER -o "$MSOLVER_BIN" "$MSOLVER_SRC"
 
-#Compile attempts
-for i in $( ls $PROBLEM_ATTEMPT_PATH/$PROBLEM_ATTEMPT_PATTERN ); do
+
+for i in $( ls $PROBLEM_ATTEMPT_PATH/* ); do
   bin_name=$( basename $i)
-  bin_name="${bin_name%%.*}"
+  bin_name="$PROBLEM_ATTEMPT_PATTERN${bin_name%%.*}"
+  echo "Compiling solution $bin_name ..."
   $COMPILER -o "$BUILD_DIR/$bin_name" "$i" $COMMON_SRC_PATH/*
 done
 
@@ -72,20 +70,26 @@ echo "$($DIS_GEN_BIN $PROBLEM_DISTR_SIZE $PROBLEM_SEED)" >> $PROBLEM_INPUT
 echo "$PROBLEM_ROLLS" >> $PROBLEM_INPUT
 echo "$($RVALUE_BIN $PROBLEM_ROLLS $PROBLEM_SEED)" >> $PROBLEM_INPUT
 
-echo "Generating answers..."
+echo "Generating answers with trivial solution..."
 $TSOLVER_BIN < $PROBLEM_INPUT > $PROBLEM_ANSWERS
 
-echo "Measuring mock (no algorithm) input and output performance..."
+HORIZONTAL_RULE="====================================="
+
+echo $HORIZONTAL_RULE
+echo "Measuring mock (no actual solving) solution ..."
 time $MSOLVER_BIN < $PROBLEM_INPUT > /dev/null
+echo $HORIZONTAL_RULE
 
-echo "Measuring trivial algorithm performance..."
+echo "Measuring trivial solution ..."
 time $TSOLVER_BIN < $PROBLEM_INPUT > /dev/null
+echo $HORIZONTAL_RULE
 
-for i in $( ls $BUILD_DIR/$PROBLEM_ATTEMPT_PATTERN ); do
-  echo "Measuring $i ..."
+for i in $( ls $BUILD_DIR/$PROBLEM_ATTEMPT_PATTERN[[:digit:]]* ); do
+  echo "Measuring $( basename $i) ..."
   time $i < $PROBLEM_INPUT > /dev/null
   echo "Validating answers..."
   $i < $PROBLEM_INPUT | $VALDTR_BIN $PROBLEM_ROLLS "$PROBLEM_ANSWERS"
+  echo $HORIZONTAL_RULE
   #$VALDTR_BIN $PROBLEM_ROLLS "$PROBLEM_ANSWERS"  < "$i < $PROBLEM_INPUT"
   #if [[ $(diff <( cat $PROBLEM_ANSWERS ) <( $i < $PROBLEM_INPUT )) ]]; then
   #  echo "Validation failed! (For Attempt 1 this is okay, see README)"

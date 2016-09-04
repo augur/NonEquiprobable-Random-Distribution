@@ -1,5 +1,5 @@
-#include <iostream>
-#include "input_reading.cpp"
+#include "attempt.hpp"
+#include "input_reading.hpp"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ int main(int argc, char const *argv[]) {
 
   input_read(dist_count, distribution, rvalue_count, rvalues);
 
-  for (size_t j = 0; j < rvalue_count; j++) {
-    cout << 0 << " ";
-  }
+  do_attempt(dist_count, distribution, rvalue_count, rvalues);
+
+  return 0;
 }

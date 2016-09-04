@@ -1,7 +1,6 @@
 #include <iostream>
 #include <algorithm>
-
-#include "input_reading.hpp"
+#include "attempt.hpp"
 
 using namespace std;
 
@@ -17,14 +16,8 @@ int binary_range_search(double*& array, size_t lo, size_t hi, double val) {
 }
 
 
-int main(int argc, char const *argv[]) {
-
-  size_t dist_count;
-  double* distribution;
-  size_t rvalue_count;
-  double* rvalues;
-
-  input_read(dist_count, distribution, rvalue_count, rvalues);
+void do_attempt(size_t& dist_count, double*& distribution,
+                size_t& rvalue_count, double*& rvalues) {
 
   double* enhanced_dist = new double[dist_count];
 
@@ -43,4 +36,5 @@ int main(int argc, char const *argv[]) {
       cout << index << " ";
     }
   }
+
 }

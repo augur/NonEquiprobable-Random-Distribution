@@ -1,23 +1,12 @@
 #include <iostream>
 #include <cstdint>
 #include <cmath>
-
-#include "input_reading.hpp"
-#include "rational.hpp"
+#include "attempt.hpp"
 
 using namespace std;
 
-//Commented out!
-//const uint64_t memory_limit = 1000000;
-
-int main(int argc, char const *argv[]) {
-
-  size_t dist_count;
-  double* distribution;
-  size_t rvalue_count;
-  double* rvalues;
-
-  input_read(dist_count, distribution, rvalue_count, rvalues);
+void do_attempt(size_t& dist_count, double*& distribution,
+                size_t& rvalue_count, double*& rvalues) {
 
   //Implying we have no more than 65536 outcomes
   //Let memory limit be square of outcomes count
@@ -43,6 +32,5 @@ int main(int argc, char const *argv[]) {
     long int_rval = lround(rvalues[i] * (total-1));
     std::cout << indices[int_rval] << " ";
   }
-
 
 }
